@@ -25,13 +25,13 @@ export async function generatePDF(inputs, results, userInfo) {
   const content = document.createElement('div')
   content.innerHTML = `
     <div style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #1a1a2e; padding: 40px; max-width: 800px;">
-      <div style="border-bottom: 3px solid #1e3a5f; padding-bottom: 20px; margin-bottom: 30px;">
-        <h1 style="color: #1e3a5f; font-size: 24px; margin: 0;">Data Center Heat Rejection Report</h1>
+      <div style="border-bottom: 3px solid #0284c7; padding-bottom: 20px; margin-bottom: 30px;">
+        <h1 style="color: #0c4a6e; font-size: 24px; margin: 0;">Data Center Heat Rejection Report</h1>
         <p style="color: #64748b; margin: 8px 0 0 0; font-size: 14px;">Franc Engineering | ${new Date().toLocaleDateString()}</p>
         ${userInfo?.projectName ? `<p style="color: #64748b; margin: 4px 0 0 0; font-size: 14px;">Project: ${userInfo.projectName}</p>` : ''}
       </div>
 
-      <h2 style="color: #1e3a5f; font-size: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">Design Inputs</h2>
+      <h2 style="color: #0c4a6e; font-size: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">Design Inputs</h2>
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
         <tr style="background: #f8fafc;">
           <td style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 600;">IT Load</td>
@@ -59,10 +59,10 @@ export async function generatePDF(inputs, results, userInfo) {
         </tr>
       </table>
 
-      <h2 style="color: #1e3a5f; font-size: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">Calculation Results</h2>
+      <h2 style="color: #0c4a6e; font-size: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">Calculation Results</h2>
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
         <thead>
-          <tr style="background: #1e3a5f; color: white;">
+          <tr style="background: #0284c7; color: white;">
             <th style="padding: 10px 12px; text-align: left;">Parameter</th>
             <th style="padding: 10px 12px; text-align: right;">Value</th>
             <th style="padding: 10px 12px; text-align: left;">Unit</th>
@@ -139,10 +139,10 @@ export async function generatePDF(inputs, results, userInfo) {
         </tbody>
       </table>
 
-      <h2 style="color: #1e3a5f; font-size: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">Equipment Summary</h2>
+      <h2 style="color: #0c4a6e; font-size: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">Equipment Summary</h2>
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
         <thead>
-          <tr style="background: #1e3a5f; color: white;">
+          <tr style="background: #0284c7; color: white;">
             <th style="padding: 10px 12px; text-align: left;">Equipment</th>
             <th style="padding: 10px 12px; text-align: right;">Quantity</th>
             <th style="padding: 10px 12px; text-align: right;">Size</th>
@@ -177,14 +177,14 @@ export async function generatePDF(inputs, results, userInfo) {
         </tbody>
       </table>
 
-      <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #1e3a5f;">
-        <h3 style="color: #1e3a5f; font-size: 14px; margin: 0 0 8px 0;">Methodology</h3>
+      <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #0284c7;">
+        <h3 style="color: #0c4a6e; font-size: 14px; margin: 0 0 8px 0;">Methodology</h3>
         <p style="font-size: 11px; color: #64748b; line-height: 1.6; margin: 0 0 12px 0;">
           This report provides preliminary screening-level estimates for data center cooling system sizing.
           Calculations use standard ASHRAE relationships for heat rejection, airflow, and water consumption.
           Results are suitable for early-stage feasibility evaluation and should not replace detailed engineering analysis.
         </p>
-        <p style="font-size: 12px; color: #1e3a5f; font-weight: 600; margin: 0;">
+        <p style="font-size: 12px; color: #0c4a6e; font-weight: 600; margin: 0;">
           For detailed thermal design and PE review, contact Franc Engineering
         </p>
         <p style="font-size: 11px; color: #64748b; margin: 4px 0 0 0;">

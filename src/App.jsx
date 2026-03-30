@@ -25,14 +25,22 @@ const defaultInputs = {
 export default function App() {
   const [inputs, setInputs] = useState(defaultInputs)
   const [showEmailModal, setShowEmailModal] = useState(false)
+  const [hasCalculated, setHasCalculated] = useState(false)
 
   const results = useMemo(() => {
-    if (inputs.itLoad <= 0) return null
+    if (!hasCalculated || inputs.itLoad <= 0) return null
     return calculate(inputs)
-  }, [inputs])
+  }, [inputs, hasCalculated])
 
   const handleInputChange = (updates) => {
     setInputs(prev => ({ ...prev, ...updates }))
+    if (hasCalculated) {
+      setHasCalculated(true) // Re-calculate live after first click
+    }
+  }
+
+  const handleCalculate = () => {
+    setHasCalculated(true)
   }
 
   const handleDownloadPDF = () => {
@@ -44,46 +52,54 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-['Inter',system-ui,sans-serif]">
+    <div className="min-h-screen bg-gray-50 flex flex-col" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
       {/* Header */}
-      <header className="bg-[#1e3a5f] text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center font-bold text-lg">
-                F
-              </div>
-              <div>
-                <h1 className="text-base sm:text-lg font-semibold leading-tight m-0">
-                  Data Center Heat Rejection Calculator
-                </h1>
-                <p className="text-xs text-white/60 hidden sm:block m-0">Franc Engineering</p>
-              </div>
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+        <div className="max-w-[1200px] mx-auto px-5 flex items-center justify-between h-[60px]">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-sky-500 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+              F
             </div>
-            <a
-              href="https://franceng.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-white/70 hover:text-white transition-colors hidden sm:block"
-            >
-              franceng.com
-            </a>
+            <div>
+              <div className="text-[0.9375rem] font-semibold text-gray-900 leading-tight">Franc Engineering</div>
+              <div className="text-xs text-gray-500 leading-tight">Data Center Heat Rejection Calculator</div>
+            </div>
+          </div>
+          <div className="hidden sm:block">
+            <span className="text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1.5 rounded-full">
+              Data Center Tools
+            </span>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-          {/* Input Panel */}
-          <div className="lg:col-span-4">
-            <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-5 sm:p-6 lg:sticky lg:top-6">
-              <InputPanel inputs={inputs} onChange={handleInputChange} />
-            </div>
+      <main className="flex-1 max-w-[1200px] mx-auto w-full px-5 py-8">
+        {/* Intro */}
+        <div className="mb-8">
+          <h1 className="text-2xl font-medium text-gray-900 mb-2 leading-tight">Data Center Heat Rejection Calculator</h1>
+          <p className="text-sm text-gray-600 leading-relaxed max-w-2xl">
+            Estimate cooling system requirements for data center projects based on IT load, climate zone, and cooling approach.
+            Calculate heat rejection loads, equipment sizing, airflow requirements, and water consumption.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6">
+          {/* Input Column */}
+          <div className="space-y-4">
+            <InputPanel inputs={inputs} onChange={handleInputChange} />
+
+            {/* Calculate Button */}
+            <button
+              onClick={handleCalculate}
+              className="w-full py-3 bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-semibold rounded-xl text-base transition-colors shadow-sm"
+            >
+              Calculate Heat Rejection
+            </button>
           </div>
 
-          {/* Results Panel */}
-          <div className="lg:col-span-8">
+          {/* Results Column */}
+          <div className="lg:sticky lg:top-[80px] lg:self-start space-y-4">
             {results ? (
               <ResultsPanel
                 results={results}
@@ -91,36 +107,53 @@ export default function App() {
                 onDownloadPDF={handleDownloadPDF}
               />
             ) : (
-              <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-12 text-center">
-                <div className="text-slate-400 mb-3">
-                  <svg className="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                  </svg>
+              /* Placeholder State */
+              <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
+                <div className="bg-gray-50 px-5 py-3 border-b border-gray-200 rounded-t-xl">
+                  <h2 className="text-[0.9375rem] font-semibold text-gray-800 m-0">Results</h2>
                 </div>
-                <p className="text-slate-500 text-sm m-0">Enter an IT load to see results.</p>
+                <div className="px-6 py-16 text-center">
+                  <div className="text-gray-300 mb-4">
+                    <svg className="w-16 h-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <p className="text-sm text-gray-500 m-0">Configure your inputs and click <strong>Calculate</strong> to see heat rejection results.</p>
+                </div>
               </div>
             )}
+
+            {/* CTA Card */}
+            <div className="rounded-xl border border-sky-200 p-5" style={{ background: 'linear-gradient(135deg, #f0f9ff, white)' }}>
+              <h3 className="text-base font-semibold text-sky-900 mb-1.5">Need Detailed Thermal Design?</h3>
+              <p className="text-sm text-gray-600 mb-3 leading-relaxed">
+                Get PE-stamped cooling system design, detailed thermal analysis, and construction-ready specifications from a licensed Professional Engineer.
+              </p>
+              <a
+                href="https://www.franc.engineering"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium rounded-lg transition-colors"
+              >
+                Contact Franc Engineering
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="bg-[#1e3a5f] text-white/60 py-6 mt-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
-            <div className="flex items-center gap-4">
-              <a href="https://franceng.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                franceng.com
-              </a>
-              <span className="text-white/30">|</span>
-              <a href="mailto:info@franceng.com" className="hover:text-white transition-colors">
-                info@franceng.com
-              </a>
-            </div>
-            <p className="text-xs text-white/40 m-0">
-              Screening-level estimates for preliminary evaluation. Not a substitute for detailed engineering.
-            </p>
-          </div>
+      <footer className="bg-gray-800 text-white py-6 mt-10">
+        <div className="max-w-[1200px] mx-auto px-5 text-center">
+          <p className="text-sm text-gray-400 m-0">
+            &copy; {new Date().getFullYear()} Franc Engineering. All rights reserved.
+          </p>
+          <p className="text-xs text-gray-500 mt-2 m-0 max-w-lg mx-auto leading-relaxed">
+            This tool provides screening-level estimates for preliminary evaluation only. Results should not be used as a substitute for detailed engineering analysis by a licensed Professional Engineer.
+          </p>
         </div>
       </footer>
 

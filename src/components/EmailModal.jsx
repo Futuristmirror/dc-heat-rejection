@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+const inputClass = "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-colors"
+
 export default function EmailModal({ isOpen, onClose, onSubmit }) {
   const [email, setEmail] = useState('')
   const [company, setCompany] = useState('')
@@ -23,7 +25,7 @@ export default function EmailModal({ isOpen, onClose, onSubmit }) {
       await onSubmit({ email, company, projectName })
       onClose()
     } catch {
-      setError('Failed to submit. Please try again.')
+      setError('Failed to generate report. Please try again.')
     } finally {
       setSubmitting(false)
     }
@@ -35,21 +37,21 @@ export default function EmailModal({ isOpen, onClose, onSubmit }) {
       <div className="relative bg-white rounded-xl shadow-xl max-w-md w-full p-6">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
-        <h3 className="text-lg font-semibold text-slate-800 mb-1">Download PDF Report</h3>
-        <p className="text-sm text-slate-500 mb-5">
-          Enter your email to receive a detailed report with all inputs, results, and equipment summary.
+        <h3 className="text-lg font-semibold text-gray-900 mb-1">Download PDF Report</h3>
+        <p className="text-sm text-gray-500 mb-5 leading-relaxed">
+          Enter your email to receive a detailed report with inputs, results, and equipment summary.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Email <span className="text-red-500">*</span>
             </label>
             <input
@@ -58,50 +60,50 @@ export default function EmailModal({ isOpen, onClose, onSubmit }) {
               value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder="you@company.com"
-              className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] focus:border-[#1e3a5f] text-sm"
+              className={inputClass}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Company <span className="text-slate-400">(optional)</span>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Company <span className="text-gray-400 text-xs">(optional)</span>
             </label>
             <input
               type="text"
               value={company}
               onChange={e => setCompany(e.target.value)}
               placeholder="Your company"
-              className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] focus:border-[#1e3a5f] text-sm"
+              className={inputClass}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Project Name <span className="text-slate-400">(optional)</span>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Project Name <span className="text-gray-400 text-xs">(optional)</span>
             </label>
             <input
               type="text"
               value={projectName}
               onChange={e => setProjectName(e.target.value)}
               placeholder="e.g., Phoenix Campus Phase 1"
-              className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] focus:border-[#1e3a5f] text-sm"
+              className={inputClass}
             />
           </div>
 
           {error && (
-            <p className="text-sm text-red-600">{error}</p>
+            <p className="text-sm text-red-600 m-0">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={submitting}
-            className="w-full px-4 py-2.5 bg-[#1e3a5f] text-white rounded-lg hover:bg-[#2d5a8e] transition-colors font-medium shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitting ? 'Generating...' : 'Download Report'}
           </button>
         </form>
 
-        <p className="text-xs text-slate-400 mt-4 text-center">
+        <p className="text-xs text-gray-400 mt-4 text-center m-0">
           Your information is used only to deliver this report.
         </p>
       </div>
