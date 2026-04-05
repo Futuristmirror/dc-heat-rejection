@@ -135,7 +135,7 @@ export async function generatePDF(inputs, results, userInfo) {
     '</table>',
 
     // ===== SPACER - push page 2 content onto next page =====
-    '<div style="height:600px;"></div>',
+    '<div style="height:300px;"></div>',
 
     // ===== PAGE 2 =====
 
