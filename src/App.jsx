@@ -131,6 +131,7 @@ export default function App() {
               </p>
               <a
                 href="mailto:caseym@franceng.com?subject=Data%20Center%20Cooling%20-%20Engineering%20Inquiry"
+                onClick={() => window.open('https://franceng.com/contact/', '_blank')}
                 className="inline-flex items-center gap-1.5 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium rounded-lg transition-colors"
               >
                 Contact Franc Engineering
