@@ -84,68 +84,72 @@ export async function generatePDF(inputs, results, userInfo) {
   // Capacity bar chart as SVG
   const maxVal = Math.max(results.heatRejectionLoad, results.totalFacilityLoad)
   const barScale = (v) => Math.round((v / maxVal) * 280)
-  const capacityChart = '<svg viewBox="0 0 400 120" width="400" height="120" xmlns="http://www.w3.org/2000/svg">' +
+  const capacityChart = '<svg viewBox="0 0 420 90" width="420" height="90" xmlns="http://www.w3.org/2000/svg">' +
     // IT Load bar
-    '<rect x="100" y="10" width="' + barScale(inputs.itLoad) + '" height="24" rx="3" fill="#0284c7"/>' +
-    '<text x="92" y="27" text-anchor="end" font-size="11" fill="#374151" font-family="Helvetica,Arial,sans-serif">IT Load</text>' +
-    '<text x="' + (105 + barScale(inputs.itLoad)) + '" y="27" font-size="11" fill="#374151" font-family="Helvetica,Arial,sans-serif">' + inputs.itLoad.toFixed(1) + ' MW</text>' +
+    '<rect x="80" y="6" width="' + barScale(inputs.itLoad) + '" height="20" rx="3" fill="#0284c7"/>' +
+    '<text x="74" y="20" text-anchor="end" font-size="10" fill="#374151" font-family="Helvetica,Arial,sans-serif">IT Load</text>' +
+    '<text x="' + (85 + barScale(inputs.itLoad)) + '" y="20" font-size="10" fill="#374151" font-family="Helvetica,Arial,sans-serif">' + inputs.itLoad.toFixed(1) + ' MW</text>' +
     // Total Facility bar
-    '<rect x="100" y="44" width="' + barScale(results.totalFacilityLoad) + '" height="24" rx="3" fill="#38bdf8"/>' +
-    '<text x="92" y="61" text-anchor="end" font-size="11" fill="#374151" font-family="Helvetica,Arial,sans-serif">Facility</text>' +
-    '<text x="' + (105 + barScale(results.totalFacilityLoad)) + '" y="61" font-size="11" fill="#374151" font-family="Helvetica,Arial,sans-serif">' + results.totalFacilityLoad.toFixed(1) + ' MW</text>' +
+    '<rect x="80" y="32" width="' + barScale(results.totalFacilityLoad) + '" height="20" rx="3" fill="#38bdf8"/>' +
+    '<text x="74" y="46" text-anchor="end" font-size="10" fill="#374151" font-family="Helvetica,Arial,sans-serif">Facility</text>' +
+    '<text x="' + (85 + barScale(results.totalFacilityLoad)) + '" y="46" font-size="10" fill="#374151" font-family="Helvetica,Arial,sans-serif">' + results.totalFacilityLoad.toFixed(1) + ' MW</text>' +
     // Heat Rejection bar
-    '<rect x="100" y="78" width="' + barScale(results.heatRejectionLoad) + '" height="24" rx="3" fill="#f59e0b"/>' +
-    '<text x="92" y="95" text-anchor="end" font-size="11" fill="#374151" font-family="Helvetica,Arial,sans-serif">Heat Rej.</text>' +
-    '<text x="' + (105 + barScale(results.heatRejectionLoad)) + '" y="95" font-size="11" fill="#374151" font-family="Helvetica,Arial,sans-serif">' + results.heatRejectionLoad.toFixed(1) + ' MW</text>' +
+    '<rect x="80" y="58" width="' + barScale(results.heatRejectionLoad) + '" height="20" rx="3" fill="#f59e0b"/>' +
+    '<text x="74" y="72" text-anchor="end" font-size="10" fill="#374151" font-family="Helvetica,Arial,sans-serif">Heat Rej.</text>' +
+    '<text x="' + (85 + barScale(results.heatRejectionLoad)) + '" y="72" font-size="10" fill="#374151" font-family="Helvetica,Arial,sans-serif">' + results.heatRejectionLoad.toFixed(1) + ' MW</text>' +
     '</svg>'
 
   const htmlStr = [
-    '<div style="font-family:Helvetica,Arial,sans-serif;color:#1a1a2e;padding:32px 36px;max-width:780px;font-size:13px;line-height:1.5;">',
+    '<div style="font-family:Helvetica,Arial,sans-serif;color:#1a1a2e;padding:28px 36px;max-width:780px;font-size:13px;line-height:1.4;">',
 
     // ==================== PAGE 1 ====================
 
     // Header with icon
-    '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #0284c7;padding-bottom:16px;margin-bottom:20px;">',
+    '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #0284c7;padding-bottom:12px;margin-bottom:14px;">',
     '<div>',
-    '<div style="font-size:24px;font-weight:bold;color:#0c4a6e;margin:0 0 4px 0;">Data Center Cooling Report</div>',
-    '<div style="color:#64748b;font-size:13px;">Franc Engineering | ' + dateStr + '</div>',
-    projectLine ? '<div style="color:#64748b;font-size:13px;">' + projectLine + '</div>' : '',
+    '<div style="font-size:22px;font-weight:bold;color:#0c4a6e;margin:0 0 3px 0;">Data Center Cooling Report</div>',
+    '<div style="color:#64748b;font-size:12px;">Franc Engineering | ' + dateStr + '</div>',
+    projectLine ? '<div style="color:#64748b;font-size:12px;">' + projectLine + '</div>' : '',
     '</div>',
     '<div>' + coolingSVG + '</div>',
     '</div>',
 
     // Primary Results Banner
-    '<div style="background:linear-gradient(135deg,#0c4a6e,#0284c7);border-radius:10px;padding:20px 24px;margin-bottom:20px;color:white;display:flex;justify-content:space-around;text-align:center;">',
-    '<div><div style="font-size:11px;opacity:0.8;margin-bottom:4px;">Total Heat Rejection</div><div style="font-size:26px;font-weight:bold;">' + results.heatRejectionLoad.toFixed(1) + '<span style="font-size:14px;font-weight:normal;opacity:0.8;"> MW<sub>th</sub></span></div></div>',
+    '<div style="background:linear-gradient(135deg,#0c4a6e,#0284c7);border-radius:8px;padding:14px 20px;margin-bottom:14px;color:white;display:flex;justify-content:space-around;text-align:center;">',
+    '<div><div style="font-size:10px;opacity:0.8;margin-bottom:2px;">Total Heat Rejection</div><div style="font-size:22px;font-weight:bold;">' + results.heatRejectionLoad.toFixed(1) + '<span style="font-size:12px;font-weight:normal;opacity:0.8;"> MW<sub>th</sub></span></div></div>',
     '<div style="border-left:1px solid rgba(255,255,255,0.3);"></div>',
-    '<div><div style="font-size:11px;opacity:0.8;margin-bottom:4px;">Cooling Capacity</div><div style="font-size:26px;font-weight:bold;">' + formatNumber(results.coolingCapacityTons) + '<span style="font-size:14px;font-weight:normal;opacity:0.8;"> tons</span></div></div>',
+    '<div><div style="font-size:10px;opacity:0.8;margin-bottom:2px;">Cooling Capacity</div><div style="font-size:22px;font-weight:bold;">' + formatNumber(results.coolingCapacityTons) + '<span style="font-size:12px;font-weight:normal;opacity:0.8;"> tons</span></div></div>',
     '<div style="border-left:1px solid rgba(255,255,255,0.3);"></div>',
-    '<div><div style="font-size:11px;opacity:0.8;margin-bottom:4px;">PUE</div><div style="font-size:26px;font-weight:bold;">' + inputs.pue + '</div></div>',
+    '<div><div style="font-size:10px;opacity:0.8;margin-bottom:2px;">PUE</div><div style="font-size:22px;font-weight:bold;">' + inputs.pue + '</div></div>',
     '</div>',
 
-    // Design Inputs
-    '<div style="font-size:15px;font-weight:bold;color:#0c4a6e;border-bottom:1px solid #e2e8f0;padding-bottom:5px;margin-bottom:10px;">Design Inputs</div>',
-    '<table style="width:100%;border-collapse:collapse;margin-bottom:16px;">',
+    // Design Inputs - compact two-column layout
+    '<div style="font-size:14px;font-weight:bold;color:#0c4a6e;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:6px;">Design Inputs</div>',
+    '<div style="display:flex;gap:8px;margin-bottom:12px;">',
+    '<table style="flex:1;border-collapse:collapse;">',
     tableRow('IT Load', inputs.itLoad + ' MW', true),
     tableRow('Target PUE', String(inputs.pue), false),
-    tableRow('Climate Zone', climateLabel + ' (' + inputs.dryBulbTemp + '\u00B0F DB / ' + inputs.wetBulbTemp + '\u00B0F WB)', true),
-    tableRow('Cooling Approach', coolingLabel, false),
-    tableRow('Supply/Return Fluid Temp', inputs.supplyAirTemp + '\u00B0F / ' + inputs.returnAirTemp + '\u00B0F', true),
-    tableRow('Redundancy', results.redundancyLabel, false),
+    tableRow('Climate Zone', climateLabel, true),
     '</table>',
+    '<table style="flex:1;border-collapse:collapse;">',
+    tableRow('Cooling Approach', coolingLabel, true),
+    tableRow('Supply/Return Fluid Temp', inputs.supplyAirTemp + '\u00B0F / ' + inputs.returnAirTemp + '\u00B0F', false),
+    tableRow('Redundancy', results.redundancyLabel, true),
+    '</table>',
+    '</div>',
 
-    // Load Breakdown Chart
-    '<div style="font-size:15px;font-weight:bold;color:#0c4a6e;border-bottom:1px solid #e2e8f0;padding-bottom:5px;margin-bottom:10px;">Load Breakdown</div>',
-    '<div style="text-align:center;margin-bottom:16px;">' + capacityChart + '</div>',
+    // Load Breakdown Chart - reduced height
+    '<div style="font-size:14px;font-weight:bold;color:#0c4a6e;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:6px;">Load Breakdown</div>',
+    '<div style="text-align:center;margin-bottom:10px;">' + capacityChart + '</div>',
 
     // Calculation Results Table
-    '<div style="font-size:15px;font-weight:bold;color:#0c4a6e;border-bottom:1px solid #e2e8f0;padding-bottom:5px;margin-bottom:10px;">Calculation Results</div>',
+    '<div style="font-size:14px;font-weight:bold;color:#0c4a6e;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:6px;">Calculation Results</div>',
     '<table style="width:100%;border-collapse:collapse;margin-bottom:0;">',
     '<tr style="background:#0284c7;color:white;">',
-    '<th style="padding:7px 10px;text-align:left;font-size:12px;">Parameter</th>',
-    '<th style="padding:7px 10px;text-align:right;font-size:12px;">Value</th>',
-    '<th style="padding:7px 10px;text-align:left;font-size:12px;">Unit</th>',
-    '<th style="padding:7px 10px;text-align:left;font-size:12px;">Notes</th>',
+    '<th style="padding:5px 8px;text-align:left;font-size:11px;">Parameter</th>',
+    '<th style="padding:5px 8px;text-align:right;font-size:11px;">Value</th>',
+    '<th style="padding:5px 8px;text-align:left;font-size:11px;">Unit</th>',
+    '<th style="padding:5px 8px;text-align:left;font-size:11px;">Notes</th>',
     '</tr>',
     resultRow('IT Load', inputs.itLoad.toFixed(1), 'MW', 'User input', true),
     resultRow('Total Facility Load', results.totalFacilityLoad.toFixed(1), 'MW', 'At PUE ' + inputs.pue, false),
@@ -262,27 +266,27 @@ export async function generatePDF(inputs, results, userInfo) {
 function tableRow(label, value, shaded) {
   var bg = shaded ? 'background:#f8fafc;' : ''
   return '<tr style="' + bg + '">' +
-    '<td style="padding:7px 10px;border:1px solid #e2e8f0;font-weight:600;font-size:12px;">' + label + '</td>' +
-    '<td style="padding:7px 10px;border:1px solid #e2e8f0;font-size:12px;">' + value + '</td>' +
+    '<td style="padding:4px 8px;border:1px solid #e2e8f0;font-weight:600;font-size:11px;">' + label + '</td>' +
+    '<td style="padding:4px 8px;border:1px solid #e2e8f0;font-size:11px;">' + value + '</td>' +
     '</tr>'
 }
 
 function resultRow(label, value, unit, notes, shaded) {
   var bg = shaded ? 'background:#f8fafc;' : ''
   return '<tr style="' + bg + '">' +
-    '<td style="padding:6px 10px;border:1px solid #e2e8f0;font-size:12px;">' + label + '</td>' +
-    '<td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right;font-weight:600;font-size:12px;">' + value + '</td>' +
-    '<td style="padding:6px 10px;border:1px solid #e2e8f0;font-size:12px;">' + unit + '</td>' +
-    '<td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;font-size:11px;">' + notes + '</td>' +
+    '<td style="padding:4px 8px;border:1px solid #e2e8f0;font-size:11px;">' + label + '</td>' +
+    '<td style="padding:4px 8px;border:1px solid #e2e8f0;text-align:right;font-weight:600;font-size:11px;">' + value + '</td>' +
+    '<td style="padding:4px 8px;border:1px solid #e2e8f0;font-size:11px;">' + unit + '</td>' +
+    '<td style="padding:4px 8px;border:1px solid #e2e8f0;color:#64748b;font-size:10px;">' + notes + '</td>' +
     '</tr>'
 }
 
 function equipRow(name, qty, size, notes, shaded) {
   var bg = shaded ? 'background:#f8fafc;' : ''
   return '<tr style="' + bg + '">' +
-    '<td style="padding:7px 10px;border:1px solid #e2e8f0;font-size:12px;">' + name + '</td>' +
-    '<td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:right;font-size:12px;">' + qty + '</td>' +
-    '<td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:right;font-size:12px;">' + size + '</td>' +
-    '<td style="padding:7px 10px;border:1px solid #e2e8f0;color:#64748b;font-size:11px;">' + notes + '</td>' +
+    '<td style="padding:6px 10px;border:1px solid #e2e8f0;font-size:12px;">' + name + '</td>' +
+    '<td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right;font-size:12px;">' + qty + '</td>' +
+    '<td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:right;font-size:12px;">' + size + '</td>' +
+    '<td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;font-size:11px;">' + notes + '</td>' +
     '</tr>'
 }
