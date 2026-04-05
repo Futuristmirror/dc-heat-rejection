@@ -23,195 +23,133 @@ export async function generatePDF(inputs, results, userInfo) {
     'mild': 'Mild',
   }[inputs.climateZone] || inputs.climateZone
 
-  const content = document.createElement('div')
-  content.innerHTML = `
-    <div style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #1a1a2e; padding: 40px; max-width: 800px;">
-      <div style="border-bottom: 3px solid #0284c7; padding-bottom: 20px; margin-bottom: 30px;">
-        <h1 style="color: #0c4a6e; font-size: 24px; margin: 0;">Data Center Cooling Report</h1>
-        <p style="color: #64748b; margin: 8px 0 0 0; font-size: 14px;">Franc Engineering | ${new Date().toLocaleDateString()}</p>
-        ${userInfo?.projectName ? `<p style="color: #64748b; margin: 4px 0 0 0; font-size: 14px;">Project: ${userInfo.projectName}</p>` : ''}
-      </div>
+  const deltaT = inputs.returnAirTemp - inputs.supplyAirTemp
+  const chwDelta = inputs.chilledWaterReturn - inputs.chilledWaterSupply
+  const dateStr = new Date().toLocaleDateString()
+  const projectLine = userInfo?.projectName ? 'Project: ' + userInfo.projectName : ''
 
-      <h2 style="color: #0c4a6e; font-size: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">Design Inputs</h2>
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
-        <tr style="background: #f8fafc;">
-          <td style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 600;">IT Load</td>
-          <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">${inputs.itLoad} MW</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 600;">Target PUE</td>
-          <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">${inputs.pue}</td>
-        </tr>
-        <tr style="background: #f8fafc;">
-          <td style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 600;">Climate Zone</td>
-          <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">${climateLabel} (${inputs.dryBulbTemp}°F DB / ${inputs.wetBulbTemp}°F WB)</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 600;">Cooling Approach</td>
-          <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">${coolingLabel}</td>
-        </tr>
-        <tr style="background: #f8fafc;">
-          <td style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 600;">Supply/Return Air</td>
-          <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">${inputs.supplyAirTemp}°F / ${inputs.returnAirTemp}°F</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 600;">Redundancy</td>
-          <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">${results.redundancyLabel}</td>
-        </tr>
-      </table>
+  // Build a self-contained HTML string
+  const htmlStr = [
+    '<div style="font-family:Helvetica,Arial,sans-serif;color:#1a1a2e;padding:32px;max-width:780px;font-size:13px;line-height:1.5;">',
 
-      <h2 style="color: #0c4a6e; font-size: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">Calculation Results</h2>
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
-        <thead>
-          <tr style="background: #0284c7; color: white;">
-            <th style="padding: 10px 12px; text-align: left;">Parameter</th>
-            <th style="padding: 10px 12px; text-align: right;">Value</th>
-            <th style="padding: 10px 12px; text-align: left;">Unit</th>
-            <th style="padding: 10px 12px; text-align: left;">Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="background: #f8fafc;">
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">IT Load</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${inputs.itLoad.toFixed(1)}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">MW</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">User input</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Total Facility Load</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${results.totalFacilityLoad.toFixed(1)}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">MW</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">At PUE ${inputs.pue}</td>
-          </tr>
-          <tr style="background: #f8fafc;">
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Heat Rejection Load</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${results.heatRejectionLoad.toFixed(1)}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">MW thermal</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Including losses</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Cooling Capacity Required</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${formatNumber(results.coolingCapacityTons)}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">tons</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;"></td>
-          </tr>
-          <tr style="background: #f8fafc;">
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Chiller Quantity</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${results.chillerCount} × ${formatNumber(results.chillerSize)}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">tons</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">${results.redundancyLabel} redundancy</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Cooling Tower Capacity</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${formatNumber(results.coolingTowerCapacity)}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">tons</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">10% margin</td>
-          </tr>
-          <tr style="background: #f8fafc;">
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Data Hall Airflow</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${formatNumber(results.airflowCFM)}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">CFM</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">At ${inputs.returnAirTemp - inputs.supplyAirTemp}°F rise</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Chilled Water Flow</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${formatNumber(results.chilledWaterFlow)}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">GPM</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">${inputs.chilledWaterReturn - inputs.chilledWaterSupply}°F delta</td>
-          </tr>
-          <tr style="background: #f8fafc;">
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Condenser Water Flow</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${formatNumber(results.condenserWaterFlow)}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">GPM</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">10°F range</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Makeup Water</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${results.makeupGPM}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">GPM</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">${coolingLabel}</td>
-          </tr>
-          <tr style="background: #f8fafc;">
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Annual Water Use</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${results.annualWaterMillionGal}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Million gal</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Estimated</td>
-          </tr>
-        </tbody>
-      </table>
+    // Header
+    '<div style="border-bottom:3px solid #0284c7;padding-bottom:16px;margin-bottom:24px;">',
+    '<div style="font-size:22px;font-weight:bold;color:#0c4a6e;margin:0 0 6px 0;">Data Center Cooling Report</div>',
+    '<div style="color:#64748b;font-size:13px;">Franc Engineering | ' + dateStr + '</div>',
+    projectLine ? '<div style="color:#64748b;font-size:13px;">' + projectLine + '</div>' : '',
+    '</div>',
 
-      <h2 style="color: #0c4a6e; font-size: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">Equipment Summary</h2>
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
-        <thead>
-          <tr style="background: #0284c7; color: white;">
-            <th style="padding: 10px 12px; text-align: left;">Equipment</th>
-            <th style="padding: 10px 12px; text-align: right;">Quantity</th>
-            <th style="padding: 10px 12px; text-align: right;">Size</th>
-            <th style="padding: 10px 12px; text-align: left;">Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="background: #f8fafc;">
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Centrifugal Chillers</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${results.chillerCount}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${formatNumber(results.chillerSize)} tons</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">${results.redundancyLabel}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Cooling Towers</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${results.towerCount}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${formatNumber(results.towerSize)} tons</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">${results.redundancyLabel}, induced draft</td>
-          </tr>
-          <tr style="background: #f8fafc;">
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">CRAH Units</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${results.crahCount}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${formatNumber(results.crahSize)} CFM</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Based on density</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Chilled Water Pumps</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${results.pumpCount}</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0; text-align: right;">${results.pumpHP} HP</td>
-            <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">Variable speed</td>
-          </tr>
-        </tbody>
-      </table>
+    // Design Inputs
+    '<div style="font-size:16px;font-weight:bold;color:#0c4a6e;border-bottom:1px solid #e2e8f0;padding-bottom:6px;margin-bottom:12px;">Design Inputs</div>',
+    '<table style="width:100%;border-collapse:collapse;margin-bottom:20px;">',
+    tableRow('IT Load', inputs.itLoad + ' MW', true),
+    tableRow('Target PUE', String(inputs.pue), false),
+    tableRow('Climate Zone', climateLabel + ' (' + inputs.dryBulbTemp + '\u00B0F DB / ' + inputs.wetBulbTemp + '\u00B0F WB)', true),
+    tableRow('Cooling Approach', coolingLabel, false),
+    tableRow('Supply/Return Air', inputs.supplyAirTemp + '\u00B0F / ' + inputs.returnAirTemp + '\u00B0F', true),
+    tableRow('Redundancy', results.redundancyLabel, false),
+    '</table>',
 
-      <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #0284c7;">
-        <h3 style="color: #0c4a6e; font-size: 14px; margin: 0 0 8px 0;">Methodology</h3>
-        <p style="font-size: 11px; color: #64748b; line-height: 1.6; margin: 0 0 12px 0;">
-          This report provides preliminary screening-level estimates for data center cooling system sizing.
-          Calculations use standard ASHRAE relationships for heat rejection, airflow, and water consumption.
-          Results are suitable for early-stage feasibility evaluation and should not replace detailed engineering analysis.
-        </p>
-        <p style="font-size: 12px; color: #0c4a6e; font-weight: 600; margin: 0;">
-          For detailed thermal design and PE review, contact Franc Engineering
-        </p>
-        <p style="font-size: 11px; color: #64748b; margin: 4px 0 0 0;">
-          franceng.com | info@franceng.com
-        </p>
-      </div>
-    </div>
-  `
+    // Calculation Results
+    '<div style="font-size:16px;font-weight:bold;color:#0c4a6e;border-bottom:1px solid #e2e8f0;padding-bottom:6px;margin-bottom:12px;">Calculation Results</div>',
+    '<table style="width:100%;border-collapse:collapse;margin-bottom:20px;">',
+    '<tr style="background:#0284c7;color:white;">',
+    '<th style="padding:8px 10px;text-align:left;">Parameter</th>',
+    '<th style="padding:8px 10px;text-align:right;">Value</th>',
+    '<th style="padding:8px 10px;text-align:left;">Unit</th>',
+    '<th style="padding:8px 10px;text-align:left;">Notes</th>',
+    '</tr>',
+    resultRow('IT Load', inputs.itLoad.toFixed(1), 'MW', 'User input', true),
+    resultRow('Total Facility Load', results.totalFacilityLoad.toFixed(1), 'MW', 'At PUE ' + inputs.pue, false),
+    resultRow('Heat Rejection Load', results.heatRejectionLoad.toFixed(1), 'MW thermal', 'Including losses', true),
+    resultRow('Cooling Capacity Required', formatNumber(results.coolingCapacityTons), 'tons', '', false),
+    resultRow('Chiller Quantity', results.chillerCount + ' x ' + formatNumber(results.chillerSize), 'tons', results.redundancyLabel + ' redundancy', true),
+    resultRow('Cooling Tower Capacity', formatNumber(results.coolingTowerCapacity), 'tons', '10% margin', false),
+    resultRow('Data Hall Airflow', formatNumber(results.airflowCFM), 'CFM', 'At ' + deltaT + '\u00B0F rise', true),
+    resultRow('Chilled Water Flow', formatNumber(results.chilledWaterFlow), 'GPM', chwDelta + '\u00B0F delta', false),
+    resultRow('Condenser Water Flow', formatNumber(results.condenserWaterFlow), 'GPM', '10\u00B0F range', true),
+    resultRow('Makeup Water', formatNumber(results.makeupGPM), 'GPM', coolingLabel, false),
+    resultRow('Annual Water Use', String(results.annualWaterMillionGal), 'Million gal', 'Estimated', true),
+    '</table>',
 
-  // html2pdf requires the element to be in the DOM for html2canvas
-  content.style.position = 'fixed'
-  content.style.left = '-9999px'
-  content.style.top = '0'
-  document.body.appendChild(content)
+    // Equipment Summary
+    '<div style="font-size:16px;font-weight:bold;color:#0c4a6e;border-bottom:1px solid #e2e8f0;padding-bottom:6px;margin-bottom:12px;">Equipment Summary</div>',
+    '<table style="width:100%;border-collapse:collapse;margin-bottom:20px;">',
+    '<tr style="background:#0284c7;color:white;">',
+    '<th style="padding:8px 10px;text-align:left;">Equipment</th>',
+    '<th style="padding:8px 10px;text-align:right;">Quantity</th>',
+    '<th style="padding:8px 10px;text-align:right;">Size</th>',
+    '<th style="padding:8px 10px;text-align:left;">Notes</th>',
+    '</tr>',
+    equipRow('Centrifugal Chillers', results.chillerCount, formatNumber(results.chillerSize) + ' tons', results.redundancyLabel, true),
+    equipRow('Cooling Towers', results.towerCount, formatNumber(results.towerSize) + ' tons', results.redundancyLabel + ', induced draft', false),
+    equipRow('CRAH Units', results.crahCount, formatNumber(results.crahSize) + ' CFM', 'Based on density', true),
+    equipRow('Chilled Water Pumps', results.pumpCount, results.pumpHP + ' HP', 'Variable speed', false),
+    '</table>',
+
+    // Footer
+    '<div style="margin-top:32px;padding-top:16px;border-top:2px solid #0284c7;">',
+    '<div style="font-size:13px;font-weight:bold;color:#0c4a6e;margin-bottom:6px;">Methodology</div>',
+    '<div style="font-size:11px;color:#64748b;margin-bottom:10px;">This report provides preliminary screening-level estimates for data center cooling system sizing. Calculations use standard ASHRAE relationships for heat rejection, airflow, and water consumption. Results are suitable for early-stage feasibility evaluation and should not replace detailed engineering analysis.</div>',
+    '<div style="font-size:12px;color:#0c4a6e;font-weight:bold;">For detailed thermal design and PE review, contact Franc Engineering</div>',
+    '<div style="font-size:11px;color:#64748b;margin-top:4px;">franceng.com | caseym@franceng.com</div>',
+    '</div>',
+
+    '</div>',
+  ].join('')
+
+  // Create wrapper element
+  const wrapper = document.createElement('div')
+  wrapper.innerHTML = htmlStr
+  wrapper.style.position = 'fixed'
+  wrapper.style.left = '-9999px'
+  wrapper.style.top = '0'
+  wrapper.style.width = '800px'
+  wrapper.style.background = 'white'
+  document.body.appendChild(wrapper)
+
+  // Small delay to ensure DOM rendering completes
+  await new Promise(r => setTimeout(r, 100))
 
   const opt = {
-    margin: [0.5, 0.5],
-    filename: `DC_Cooling_Report_${inputs.itLoad}MW.pdf`,
+    margin: [0.4, 0.4],
+    filename: 'DC_Cooling_Report_' + inputs.itLoad + 'MW.pdf',
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
+    html2canvas: { scale: 2, useCORS: true, logging: false, width: 800 },
     jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
   }
 
   try {
-    await html2pdf().set(opt).from(content).save()
+    await html2pdf().set(opt).from(wrapper.firstChild).save()
   } finally {
-    document.body.removeChild(content)
+    document.body.removeChild(wrapper)
   }
+}
+
+function tableRow(label, value, shaded) {
+  const bg = shaded ? 'background:#f8fafc;' : ''
+  return '<tr style="' + bg + '">' +
+    '<td style="padding:7px 10px;border:1px solid #e2e8f0;font-weight:600;">' + label + '</td>' +
+    '<td style="padding:7px 10px;border:1px solid #e2e8f0;">' + value + '</td>' +
+    '</tr>'
+}
+
+function resultRow(label, value, unit, notes, shaded) {
+  const bg = shaded ? 'background:#f8fafc;' : ''
+  return '<tr style="' + bg + '">' +
+    '<td style="padding:7px 10px;border:1px solid #e2e8f0;">' + label + '</td>' +
+    '<td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:right;font-weight:600;">' + value + '</td>' +
+    '<td style="padding:7px 10px;border:1px solid #e2e8f0;">' + unit + '</td>' +
+    '<td style="padding:7px 10px;border:1px solid #e2e8f0;color:#64748b;">' + notes + '</td>' +
+    '</tr>'
+}
+
+function equipRow(name, qty, size, notes, shaded) {
+  const bg = shaded ? 'background:#f8fafc;' : ''
+  return '<tr style="' + bg + '">' +
+    '<td style="padding:7px 10px;border:1px solid #e2e8f0;">' + name + '</td>' +
+    '<td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:right;">' + qty + '</td>' +
+    '<td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:right;">' + size + '</td>' +
+    '<td style="padding:7px 10px;border:1px solid #e2e8f0;color:#64748b;">' + notes + '</td>' +
+    '</tr>'
 }
