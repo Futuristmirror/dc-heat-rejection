@@ -134,8 +134,8 @@ export async function generatePDF(inputs, results, userInfo) {
     rRow('Annual Water Use', String(results.annualWaterMillionGal), 'Million gal', 'Estimated', true),
     '</table>',
 
-    // ===== SPACER - push page 2 content well past the page break =====
-    '<div style="height:120px;"></div>',
+    // ===== SPACER - push page 2 content onto next page =====
+    '<div style="height:600px;"></div>',
 
     // ===== PAGE 2 =====
 
