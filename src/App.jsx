@@ -5,6 +5,7 @@ import EmailModal from './components/EmailModal'
 import { calculate } from './utils/calculations'
 import { getClimateZone } from './utils/climateData'
 import { generatePDF } from './utils/pdfGenerator'
+import { sendLeadNotification } from './utils/emailService'
 
 const defaultClimate = getClimateZone('temperate')
 
@@ -49,6 +50,8 @@ export default function App() {
 
   const handleEmailSubmit = async (userInfo) => {
     await generatePDF(inputs, results, userInfo)
+    // Send lead notification email (non-blocking)
+    sendLeadNotification(userInfo, inputs, results)
   }
 
   return (
