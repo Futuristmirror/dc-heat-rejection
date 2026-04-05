@@ -116,10 +116,10 @@ export async function generatePDF(inputs, results, userInfo) {
     '<div style="font-size:13px;font-weight:bold;color:#0c4a6e;border-bottom:1px solid #e2e8f0;padding-bottom:3px;margin-bottom:4px;">Calculation Results</div>',
     '<table style="width:100%;border-collapse:collapse;">',
     '<tr style="background:#0284c7;color:white;">',
-    '<th style="padding:4px 6px;text-align:left;font-size:10px;">Parameter</th>',
-    '<th style="padding:4px 6px;text-align:right;font-size:10px;">Value</th>',
-    '<th style="padding:4px 6px;text-align:left;font-size:10px;">Unit</th>',
-    '<th style="padding:4px 6px;text-align:left;font-size:10px;">Notes</th>',
+    '<th style="vertical-align:middle;padding:4px 6px;text-align:left;font-size:10px;">Parameter</th>',
+    '<th style="vertical-align:middle;padding:4px 6px;text-align:right;font-size:10px;">Value</th>',
+    '<th style="vertical-align:middle;padding:4px 6px;text-align:left;font-size:10px;">Unit</th>',
+    '<th style="vertical-align:middle;padding:4px 6px;text-align:left;font-size:10px;">Notes</th>',
     '</tr>',
     rRow('IT Load', inputs.itLoad.toFixed(1), 'MW', 'User input', true),
     rRow('Total Facility Load', results.totalFacilityLoad.toFixed(1), 'MW', 'At PUE ' + inputs.pue, false),
@@ -152,10 +152,10 @@ export async function generatePDF(inputs, results, userInfo) {
     '<div style="font-size:14px;font-weight:bold;color:#0c4a6e;border-bottom:1px solid #e2e8f0;padding-bottom:4px;margin-bottom:8px;">Major Equipment</div>',
     '<table style="width:100%;border-collapse:collapse;margin-bottom:20px;">',
     '<tr style="background:#0284c7;color:white;">',
-    '<th style="padding:7px 10px;text-align:left;font-size:11px;">Equipment</th>',
-    '<th style="padding:7px 10px;text-align:right;font-size:11px;">Quantity</th>',
-    '<th style="padding:7px 10px;text-align:right;font-size:11px;">Size</th>',
-    '<th style="padding:7px 10px;text-align:left;font-size:11px;">Notes</th>',
+    '<th style="vertical-align:middle;padding:7px 10px;text-align:left;font-size:11px;">Equipment</th>',
+    '<th style="vertical-align:middle;padding:7px 10px;text-align:right;font-size:11px;">Quantity</th>',
+    '<th style="vertical-align:middle;padding:7px 10px;text-align:right;font-size:11px;">Size</th>',
+    '<th style="vertical-align:middle;padding:7px 10px;text-align:left;font-size:11px;">Notes</th>',
     '</tr>',
     eRow('Centrifugal Chillers', results.chillerCount, formatNumber(results.chillerSize) + ' tons', results.redundancyLabel, true),
     eRow('Cooling Towers', results.towerCount, formatNumber(results.towerSize) + ' tons', results.redundancyLabel + ', induced draft', false),
@@ -235,15 +235,18 @@ export async function generatePDF(inputs, results, userInfo) {
 
 function tRow(label, value, shaded) {
   var bg = shaded ? 'background:#f8fafc;' : ''
-  return '<tr style="' + bg + '"><td style="padding:3px 7px;border:1px solid #e2e8f0;font-weight:600;font-size:10px;">' + label + '</td><td style="padding:3px 7px;border:1px solid #e2e8f0;font-size:10px;">' + value + '</td></tr>'
+  var s = 'padding:5px 8px;border:1px solid #e2e8f0;vertical-align:middle;font-size:10px;'
+  return '<tr style="' + bg + '"><td style="' + s + 'font-weight:600;">' + label + '</td><td style="' + s + '">' + value + '</td></tr>'
 }
 
 function rRow(label, value, unit, notes, shaded) {
   var bg = shaded ? 'background:#f8fafc;' : ''
-  return '<tr style="' + bg + '"><td style="padding:3px 6px;border:1px solid #e2e8f0;font-size:10px;">' + label + '</td><td style="padding:3px 6px;border:1px solid #e2e8f0;text-align:right;font-weight:600;font-size:10px;">' + value + '</td><td style="padding:3px 6px;border:1px solid #e2e8f0;font-size:10px;">' + unit + '</td><td style="padding:3px 6px;border:1px solid #e2e8f0;color:#64748b;font-size:9px;">' + notes + '</td></tr>'
+  var s = 'padding:5px 7px;border:1px solid #e2e8f0;vertical-align:middle;font-size:10px;'
+  return '<tr style="' + bg + '"><td style="' + s + '">' + label + '</td><td style="' + s + 'text-align:right;font-weight:600;">' + value + '</td><td style="' + s + '">' + unit + '</td><td style="' + s + 'color:#64748b;font-size:9px;">' + notes + '</td></tr>'
 }
 
 function eRow(name, qty, size, notes, shaded) {
   var bg = shaded ? 'background:#f8fafc;' : ''
-  return '<tr style="' + bg + '"><td style="padding:5px 10px;border:1px solid #e2e8f0;font-size:11px;">' + name + '</td><td style="padding:5px 10px;border:1px solid #e2e8f0;text-align:right;font-size:11px;">' + qty + '</td><td style="padding:5px 10px;border:1px solid #e2e8f0;text-align:right;font-size:11px;">' + size + '</td><td style="padding:5px 10px;border:1px solid #e2e8f0;color:#64748b;font-size:10px;">' + notes + '</td></tr>'
+  var s = 'padding:6px 10px;border:1px solid #e2e8f0;vertical-align:middle;font-size:11px;'
+  return '<tr style="' + bg + '"><td style="' + s + '">' + name + '</td><td style="' + s + 'text-align:right;">' + qty + '</td><td style="' + s + 'text-align:right;">' + size + '</td><td style="' + s + 'color:#64748b;font-size:10px;">' + notes + '</td></tr>'
 }
