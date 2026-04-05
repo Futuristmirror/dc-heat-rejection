@@ -4,7 +4,7 @@ export async function generatePDF(inputs, results, userInfo) {
 
   const formatNumber = (n) => {
     if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M'
-    return n.toLocaleString()
+    return n.toLocaleString('en-US')
   }
 
   const coolingLabel = {

@@ -59,7 +59,7 @@ export default function ComparisonChart({ inputs, results }) {
               <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12, fill: '#9ca3af' }} label={{ value: 'Tons', angle: 90, position: 'insideRight', style: { fontSize: 11, fill: '#9ca3af' } }} />
               <Tooltip
                 contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e5e7eb' }}
-                formatter={(value, name) => [value.toLocaleString(), name]}
+                formatter={(value, name) => [value.toLocaleString('en-US'), name]}
               />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Bar yAxisId="left" dataKey="Water Use (GPM)" fill="#38bdf8" />
@@ -84,7 +84,7 @@ export default function ComparisonChart({ inputs, results }) {
                 <td className="px-4 py-2 text-gray-700 font-medium">Capacity</td>
                 {comparison.map(c => (
                   <td key={c.approach} className="px-4 py-2 text-right font-mono text-gray-900">
-                    {c.results.coolingCapacityTons.toLocaleString()} tons
+                    {c.results.coolingCapacityTons.toLocaleString('en-US')} tons
                   </td>
                 ))}
               </tr>
@@ -92,7 +92,7 @@ export default function ComparisonChart({ inputs, results }) {
                 <td className="px-4 py-2 text-gray-700 font-medium">Water Use</td>
                 {comparison.map(c => (
                   <td key={c.approach} className="px-4 py-2 text-right font-mono text-gray-900">
-                    {c.results.makeupGPM === 0 ? 'None' : `${c.results.makeupGPM.toLocaleString()} GPM`}
+                    {c.results.makeupGPM === 0 ? 'None' : `${c.results.makeupGPM.toLocaleString('en-US')} GPM`}
                   </td>
                 ))}
               </tr>

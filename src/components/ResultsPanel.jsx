@@ -3,7 +3,7 @@ import ComparisonChart from './ComparisonChart'
 
 const formatNumber = (n) => {
   if (n === undefined || n === null) return '—'
-  return n.toLocaleString()
+  return n.toLocaleString('en-US')
 }
 
 function ResultRow({ label, value, unit, highlight }) {

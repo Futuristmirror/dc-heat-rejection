@@ -1,4 +1,4 @@
-const formatNumber = (n) => n?.toLocaleString() ?? '—'
+const formatNumber = (n) => n?.toLocaleString('en-US') ?? '—'
 
 export default function EquipmentTable({ results }) {
   const equipment = [
