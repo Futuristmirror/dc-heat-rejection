@@ -130,7 +130,7 @@ export default function App() {
                 Get PE-stamped cooling system design, detailed thermal analysis, and construction-ready specifications from a licensed Professional Engineer.
               </p>
               <a
-                href="https://www.franc.engineering"
+                href="https://franceng.com/contact/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium rounded-lg transition-colors"

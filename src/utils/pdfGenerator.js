@@ -1,5 +1,6 @@
 export async function generatePDF(inputs, results, userInfo) {
-  const html2pdf = (await import('html2pdf.js')).default
+  const module = await import('html2pdf.js')
+  const html2pdf = module.default || module
 
   const formatNumber = (n) => {
     if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M'
@@ -194,13 +195,23 @@ export async function generatePDF(inputs, results, userInfo) {
     </div>
   `
 
+  // html2pdf requires the element to be in the DOM for html2canvas
+  content.style.position = 'fixed'
+  content.style.left = '-9999px'
+  content.style.top = '0'
+  document.body.appendChild(content)
+
   const opt = {
     margin: [0.5, 0.5],
     filename: `DC_Cooling_Report_${inputs.itLoad}MW.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
+    html2canvas: { scale: 2, useCORS: true },
     jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
   }
 
-  return html2pdf().set(opt).from(content).save()
+  try {
+    await html2pdf().set(opt).from(content).save()
+  } finally {
+    document.body.removeChild(content)
+  }
 }
