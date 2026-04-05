@@ -89,7 +89,8 @@ export function calculate(inputs) {
 
   // Water consumption (evaporative systems)
   const heatRejectionBTU = heatRejectionLoad * 1000 * BTU_PER_KW
-  const evaporationGPM = heatRejectionBTU / 8333
+  // 8,333 BTU to evaporate 1 gallon → BTU/hr / 8333 = gal/hr → /60 = GPM
+  const evaporationGPM = heatRejectionBTU / 8333 / 60
   const cyclesOfConcentration = 4
   const blowdownGPM = evaporationGPM / (cyclesOfConcentration - 1)
   const circulationRate = condenserWaterFlow

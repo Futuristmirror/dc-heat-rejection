@@ -164,11 +164,12 @@ export async function generatePDF(inputs, results, userInfo) {
     resultRow('Annual Water Use', String(results.annualWaterMillionGal), 'Million gal', 'Estimated', true),
     '</table>',
 
-    // ==================== PAGE BREAK ====================
-    '<div style="page-break-before:always;margin-top:0;"></div>',
+    // ==================== PAGE 2 ====================
+    // Wrap entire page 2 in a single div with page-break-before
+    '<div style="page-break-before:always;">',
 
     // Page 2 Header
-    '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #0284c7;padding-bottom:12px;margin-bottom:20px;margin-top:0;">',
+    '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #0284c7;padding-bottom:12px;margin-bottom:20px;">',
     '<div>',
     '<div style="font-size:20px;font-weight:bold;color:#0c4a6e;">Equipment Summary &amp; Specifications</div>',
     '<div style="color:#64748b;font-size:12px;">Franc Engineering | ' + dateStr + '</div>',
@@ -231,6 +232,8 @@ export async function generatePDF(inputs, results, userInfo) {
     '<div style="font-size:11px;color:#64748b;">franceng.com</div>',
     '</div>',
     '</div>',
+
+    '</div>', // close page 2 wrapper
 
     '</div>',
   ].join('')
