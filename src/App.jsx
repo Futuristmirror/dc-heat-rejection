@@ -62,7 +62,7 @@ export default function App() {
             </div>
             <div>
               <div className="text-[0.9375rem] font-semibold text-gray-900 leading-tight">Franc Engineering</div>
-              <div className="text-xs text-gray-500 leading-tight">Data Center Heat Rejection Calculator</div>
+              <div className="text-xs text-gray-500 leading-tight">Data Center Cooling Calculator</div>
             </div>
           </div>
           <div className="hidden sm:block">
@@ -77,10 +77,10 @@ export default function App() {
       <main className="flex-1 max-w-[1200px] mx-auto w-full px-5 py-8">
         {/* Intro */}
         <div className="mb-8">
-          <h1 className="text-2xl font-medium text-gray-900 mb-2 leading-tight">Data Center Heat Rejection Calculator</h1>
+          <h1 className="text-2xl font-medium text-gray-900 mb-2 leading-tight">Data Center Cooling Calculator</h1>
           <p className="text-sm text-gray-600 leading-relaxed max-w-2xl">
             Estimate cooling system requirements for data center projects based on IT load, climate zone, and cooling approach.
-            Calculate heat rejection loads, equipment sizing, airflow requirements, and water consumption.
+            Calculate cooling loads, equipment sizing, airflow requirements, and water consumption.
           </p>
         </div>
 
@@ -94,7 +94,7 @@ export default function App() {
               onClick={handleCalculate}
               className="w-full py-3 bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-semibold rounded-xl text-base transition-colors shadow-sm"
             >
-              Calculate Heat Rejection
+              Calculate Cooling
             </button>
           </div>
 
@@ -118,7 +118,7 @@ export default function App() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <p className="text-sm text-gray-500 m-0">Configure your inputs and click <strong>Calculate</strong> to see heat rejection results.</p>
+                  <p className="text-sm text-gray-500 m-0">Configure your inputs and click <strong>Calculate</strong> to see cooling results.</p>
                 </div>
               </div>
             )}

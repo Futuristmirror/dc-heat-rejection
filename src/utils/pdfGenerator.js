@@ -26,7 +26,7 @@ export async function generatePDF(inputs, results, userInfo) {
   content.innerHTML = `
     <div style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #1a1a2e; padding: 40px; max-width: 800px;">
       <div style="border-bottom: 3px solid #0284c7; padding-bottom: 20px; margin-bottom: 30px;">
-        <h1 style="color: #0c4a6e; font-size: 24px; margin: 0;">Data Center Heat Rejection Report</h1>
+        <h1 style="color: #0c4a6e; font-size: 24px; margin: 0;">Data Center Cooling Report</h1>
         <p style="color: #64748b; margin: 8px 0 0 0; font-size: 14px;">Franc Engineering | ${new Date().toLocaleDateString()}</p>
         ${userInfo?.projectName ? `<p style="color: #64748b; margin: 4px 0 0 0; font-size: 14px;">Project: ${userInfo.projectName}</p>` : ''}
       </div>
@@ -196,7 +196,7 @@ export async function generatePDF(inputs, results, userInfo) {
 
   const opt = {
     margin: [0.5, 0.5],
-    filename: `DC_Heat_Rejection_Report_${inputs.itLoad}MW.pdf`,
+    filename: `DC_Cooling_Report_${inputs.itLoad}MW.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2 },
     jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
